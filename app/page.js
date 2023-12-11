@@ -1,45 +1,18 @@
-'use client';
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-import { signIn } from 'next-auth/react'
+import { authOptions } from "@/app/api/auth/[...nextauth]/options";
+import LoginComp from "@/components/login";
 
-export default function LoginPage () {
+export default async function LoginPage () {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
-
-    const router = useRouter();
-
-    const handleChange = (e, field) => {
-        if (field === 'username') {
-            setUsername(e.target.value)
-        } else {
-            setPassword(e.target.value)
-        }
-    }
-
-    const handleSubmit = async () => {
-       const res = await signIn('credentials', {
-            username: username,
-            password: password,
-            redirect: false,
-            callbackUrl: '/admin'
-        });
-
-        if (res?.error) {
-            alert('wrong name or pass')
-        } else {
-            router.push('/admin');
-            router.refresh();
-        }
+    const session = await getServerSession(authOptions)
+    
+    if (session) {
+        redirect('/admin')
     }
 
     return (
-        <>
-            <input type='text' name='username' value={username} onChange={(e) => handleChange(e, 'username')}/>
-            <input type='password' name='password' value={password} onChange={(e) => handleChange(e, 'password')}/>
-            <button type='button' onClick={()=>handleSubmit()}> LOGIN BRO </button>
-        </>
+       <LoginComp />
     )
 }
