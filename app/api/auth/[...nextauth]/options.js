@@ -9,33 +9,43 @@ export const authOptions = {
                 password: { label: "Password", type: "password" }
             },
             async authorize(credentials) {
-                // check if ts is retarded 
+    
                 if (!credentials?.username || !credentials?.password) return null;
 
-                // its not retarded
-                // hash the pass
                 
-                const user = { id: 1, name: 'tester', password: 'test123', role: 'test-admin', token: 'its-mytoken-123'}
+                //const user = { id: 1, name: 'tester', password: 'test123', role: 'test-admin', token: 'its-mytoken-123'}
+                const { username, password } = credentials
 
-                if (user.name === credentials.username && user.password === credentials.password) {
-                    return user
-                } else {
+                const res = await fetch('http://localhost:1337/auth/login', {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({username, password}),
+                });
+                // you might need to change this to res.status !== 200 :) if the custom api/auth/login backend returns something other then 401 (404, 500(general server erros))
+                if (res.status === 401) {
                     return null
                 }
+
+                const user = await res.json();
+
+                return user
             }
         })
     ],
-    session: {
+    // uncomment below to use the giga custom login page :D should work without it
+   /*  session: {
         strategy: 'jwt',
         maxAge: 7 * 24 * 60 * 60, // 7 days
     },
     pages: {
         signIn: '/',
-    },
+    }, */
     callbacks: {
         async jwt({token, user}) {
             if (user) {
-                token.user = { id: user.id, name: user.name, role: user.role }
+                token.user = { id: user.id, name: user.name, role: user.role } // might need this if u are returning the hole user object ;) keep that in mind
                 token.token = user.token
             }
             return token;
