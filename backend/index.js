@@ -22,7 +22,7 @@ app.post('/auth/login', async (req, res) => {
     if (user.name === username && user.password === password) {
         return res.status(200).json(user)
     } else {
-        return res.status(500) // careful if u return res.status(500 / 404 / etc anything diff then 401 ).json('random stuff here as json') the next auth will logg you
+        return res.status(401) // careful if u return res.status(500 / 404 / etc anything diff then 401 ).json('random stuff here as json') the next auth will logg you
         // it will use the .json('') stuff to populate the user object even if its a string :D u can try it out
     }
 
