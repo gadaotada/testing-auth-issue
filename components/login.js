@@ -1,48 +1,27 @@
 'use client';
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { signIn } from 'next-auth/react'
+import LoginModal from "./login-modal";
 
 export default function LoginComp () {
 
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [isOpen, setIsOpen] = useState(false);
 
-    const router = useRouter();
-
-    const handleChange = (e, field) => {
-        if (field === 'username') {
-            setUsername(e.target.value)
-        } else {
-            setPassword(e.target.value)
-        }
-    }
-
-    const handleSubmit = async () => {
-       const res = await signIn('credentials', {
-            username: username,
-            password: password,
-            redirect: false,
-            callbackUrl: '/admin'
-        });
-
-        if (res?.error) {
-            alert('wrong name or pass')
-        } else {
-            router.push('/admin');
-            router.refresh();
-        }
-    }
 
     return (
-        <main className="w-full h-full flex justify-center items-center">
-            <div className="flex flex-col gap-y-4 w-[500px] justify-start items-center shadow-md shadow-slate-500 p-10">
-                <h1>Simple login screen</h1>
-                <input type='text' name='username' value={username} onChange={(e) => handleChange(e, 'username')}/>
-                <input type='password' name='password' value={password} onChange={(e) => handleChange(e, 'password')}/>
-                <button type='button' onClick={()=>handleSubmit()} className="p-4 bg-blue-400 rounded-md w-[50%]"> LOGIN BRO </button>
-            </div>
-        </main>
+        <>
+            <section className={isOpen ? " opacity-40 cursor-not-allowed" : " opacity-100"}>
+                <h1>What is Lorem Ipsum?</h1>
+                <div className="text-justify">
+                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industrys standard dummy text ever since the 1500s,
+                    when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, 
+                    but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets 
+                    containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                </div>
+                <button type="button" className="px-4 py-2 bg-blue-500 hover:bg-blue-700 rounded-md text-slate-50" onClick={() => setIsOpen(!isOpen)}>
+                    Toggle Login
+                </button>
+            </section>
+            <LoginModal isOpen={isOpen} setIsOpen={setIsOpen}/>
+        </>
     )
 }

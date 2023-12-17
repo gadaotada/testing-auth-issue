@@ -35,13 +35,13 @@ export const authOptions = {
         })
     ],
     // uncomment below to use the giga custom login page :D should work without it
-   /*  session: {
+    session: {
         strategy: 'jwt',
         maxAge: 7 * 24 * 60 * 60, // 7 days
     },
     pages: {
         signIn: '/',
-    }, */
+    },
     callbacks: {
         async jwt({token, user}) {
             if (user) {
