@@ -13,6 +13,6 @@ export default async function LoginPage () {
     }
 
     return (
-       <LoginComp />
+       <LoginComp isNotLoggedIn={false} />
     )
 }
